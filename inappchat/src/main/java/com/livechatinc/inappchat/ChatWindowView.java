@@ -283,16 +283,19 @@ public class ChatWindowView extends FrameLayout implements IChatWindowView, View
             super.onPageFinished(view, url);
         }
 
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(GONE);
-                    webView.setVisibility(GONE);
-                    statusText.setVisibility(View.VISIBLE);
-                }
-            });
+            if (!request.getUrl().getHost().contains("google")) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(GONE);
+                        webView.setVisibility(GONE);
+                        statusText.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
 
             super.onReceivedError(view, request, error);
             Log.e("ChatWindow Widget", "onReceivedError: " + error + " request: " + request);
@@ -300,14 +303,17 @@ public class ChatWindowView extends FrameLayout implements IChatWindowView, View
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(GONE);
-                    webView.setVisibility(GONE);
-                    statusText.setVisibility(View.VISIBLE);
-                }
-            });
+            Uri uri = Uri.parse(failingUrl);
+            if (!uri.getHost().contains("google")) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(GONE);
+                        webView.setVisibility(GONE);
+                        statusText.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
 
             super.onReceivedError(view, errorCode, description, failingUrl);
             Log.e("ChatWindow Widget", "onReceivedError: " + errorCode + " d: " + description + " url: " + failingUrl);
