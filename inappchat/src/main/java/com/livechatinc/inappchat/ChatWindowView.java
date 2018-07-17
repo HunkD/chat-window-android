@@ -299,6 +299,7 @@ public class ChatWindowView extends FrameLayout implements IChatWindowView, View
 
             super.onReceivedError(view, request, error);
             Log.e("ChatWindow Widget", "onReceivedError: " + error + " request: " + request);
+            Log.e("ChatWindow Widget", "onReceivedError: " + error + " request.getUrl: " + request.getUrl());
         }
 
         @Override
